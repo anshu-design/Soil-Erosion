@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erosion Data</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav id="sidebar">
+        <ul>
+            <li>
+                <span class="logo">SoilErosion</span>
+                <button id="toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/>
+                    </svg>
+                </button>
+            </li>
+            <li>
+                <a href="soil.1.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+                    </svg>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="Erosion_data.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/>
+                    </svg>
+                    <span>Erosion Data</span>
+                </a>
+            </li>
+            <li>
+                <a href="Resource.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/>
+                    </svg>
+                    <span>Resources</span>
+                </a>
+            </li>
+            <li>
+                <a href="contactus.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="m480-80-10-120h-10q-142 0-241-99t-99-241q0-142 99-241t241-99q71 0 132.5 26.5t108 73q46.5 46.5 73 108T800-540q0 75-24.5 144t-67 128q-42.5 59-101 107T480-80Zm80-146q71-60 115.5-140.5T720-540q0-109-75.5-184.5T460-800q-109 0-184.5 75.5T200-540q0 109 75.5 184.5T460-280h100v54Zm-101-95q17 0 29-12t12-29q0-17-12-29t-29-12q-17 0-29 12t-12 29q0 17 12 29t29 12Zm-29-127h60q0-30 6-42t38-44q18-18 30-39t12-45q0-51-34.5-76.5T460-720q-44 0-74 24.5T344-636l56 22q5-17 19-33.5t41-16.5q27 0 40.5 15t13.5 33q0 17-10 30.5T480-558q-35 30-42.5 47.5T430-448Zm30-65Z"/>
+                    </svg>
+                    <span>Contact Us</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="container">
+            <h2>Soil Erosion Data by Region</h2>
+            <p>Enter a state or region below to access erosion data:</p>
+            <div class="search-container">
+                <input type="text" id="stateInput" placeholder="Enter your state">
+                <button onclick="searchState()">
+                    <img src="search.png" alt="Search Icon" class="search-icon">
+                </button>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="chart-container" style="display: none;">
+                <canvas id="pieChart"></canvas>
+            </div>
+            <p id="errorMessage" style="color: red; display: none;">Data for this state is not available.</p>
+
+            <!-- Data Table Section -->
+            <div class="data-table-container">
+                <h3>Erosion Data Overview</h3>
+                <table id="erosionDataTable">
+                    <thead>
+                        <tr>
+                            <th>Region</th>
+                            <th>Soil Loss Rate (tons/ha/year)</th>
+                            <th>Risk Level</th>
+                            <th>Main Causes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Example Region 1</td>
+                            <td>15</td>
+                            <td>High</td>
+                            <td>Agriculture, Deforestation</td>
+                        </tr>
+                        <tr>
+                            <td>Example Region 2</td>
+                            <td>8</td>
+                            <td>Medium</td>
+                            <td>Construction, Overgrazing</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const stateData = {
+            "Example Region 1": 8093,
+            "Example Region 2": 666,
+        };
+
+        let pieChart;
+
+        function searchState() {
+            const state = document.getElementById("stateInput").value;
+            const errorMessage = document.getElementById("errorMessage");
+
+            if (stateData[state]) {
+                errorMessage.style.display = 'none';
+                displayPieChart(stateData[state], state);
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        function displayPieChart(area, state) {
+            const totalArea = getTotalArea();
+            const statePercentage = ((area / totalArea) * 100).toFixed(2);
+            const otherPercentage = (100 - statePercentage).toFixed(2);
+
+            const chartContainer = document.querySelector('.chart-container');
+            chartContainer.style.display = 'block';
+
+            const ctx = document.getElementById('pieChart').getContext('2d');
+
+            if (pieChart) {
+                pieChart.destroy();
+            }
+
+            pieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [`${state} (${statePercentage}%)`, `Other Regions (${otherPercentage}%)`],
+                    datasets: [{
+                        data: [statePercentage, otherPercentage],
+                        backgroundColor: ["#0000FF", "#00FF00"],
+                        borderColor: "#333333",
+                        borderWidth: 2,
+                        hoverBackgroundColor: ["#FF416C", "#AAAAAA"]
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        function getTotalArea() {
+            let total = 0;
+            for (const area in stateData) {
+                total += stateData[area];
+            }
+            return total;
+        }
+    </script>
+</body>
+</html>
